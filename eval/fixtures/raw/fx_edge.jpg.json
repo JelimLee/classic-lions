@@ -1,0 +1,42 @@
+{
+  "meta": {
+    "file": "fx_edge.jpg",
+    "model": "mock-model",
+    "bytes": 666666
+  },
+  "latencyMs": 2100,
+  "attempts": 1,
+  "usage": {
+    "promptTokenCount": 1300,
+    "candidatesTokenCount": 150,
+    "thoughtsTokenCount": 900,
+    "totalTokenCount": 2350
+  },
+  "output": {
+    "title": {
+      "value": "",
+      "confidence": 0.0
+    },
+    "artist": {
+      "value": "무명 앙상블",
+      "confidence": 0.88
+    },
+    "venue": {
+      "value": "롯데콘서트홀",
+      "confidence": 0.95
+    },
+    "dateRaw": {
+      "value": "",
+      "confidence": 0.0
+    },
+    "seatRaw": {
+      "value": "",
+      "confidence": 0.0
+    },
+    "priceRaw": {
+      "value": "초대",
+      "confidence": 0.9
+    },
+    "program": []
+  }
+}

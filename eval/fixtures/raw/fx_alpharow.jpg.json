@@ -1,0 +1,42 @@
+{
+  "meta": {
+    "file": "fx_alpharow.jpg",
+    "model": "mock-model",
+    "bytes": 777777
+  },
+  "latencyMs": 2200,
+  "attempts": 1,
+  "usage": {
+    "promptTokenCount": 1400,
+    "candidatesTokenCount": 160,
+    "thoughtsTokenCount": 800,
+    "totalTokenCount": 2360
+  },
+  "output": {
+    "title": {
+      "value": "해리포터 인 콘서트",
+      "confidence": 0.94
+    },
+    "artist": {
+      "value": "",
+      "confidence": 0.0
+    },
+    "venue": {
+      "value": "세종문화회관 대극장",
+      "confidence": 0.93
+    },
+    "dateRaw": {
+      "value": "2025-12-24",
+      "confidence": 0.95
+    },
+    "seatRaw": {
+      "value": "1층 B열 191번",
+      "confidence": 0.87
+    },
+    "priceRaw": {
+      "value": "90,000원",
+      "confidence": 0.9
+    },
+    "program": []
+  }
+}

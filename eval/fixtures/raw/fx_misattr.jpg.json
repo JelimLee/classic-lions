@@ -1,0 +1,42 @@
+{
+  "meta": {
+    "file": "fx_misattr.jpg",
+    "model": "mock-model",
+    "bytes": 888888
+  },
+  "latencyMs": 2050,
+  "attempts": 1,
+  "usage": {
+    "promptTokenCount": 1350,
+    "candidatesTokenCount": 140,
+    "thoughtsTokenCount": 700,
+    "totalTokenCount": 2190
+  },
+  "output": {
+    "title": {
+      "value": "국립현대무용단 <내가 물에서 본 것>",
+      "confidence": 0.95
+    },
+    "artist": {
+      "value": "국립현대무용단",
+      "confidence": 0.95
+    },
+    "venue": {
+      "value": "예술의전당 토월극장",
+      "confidence": 0.94
+    },
+    "dateRaw": {
+      "value": "2026-03-14",
+      "confidence": 0.96
+    },
+    "seatRaw": {
+      "value": "",
+      "confidence": 0.0
+    },
+    "priceRaw": {
+      "value": "",
+      "confidence": 0.0
+    },
+    "program": []
+  }
+}

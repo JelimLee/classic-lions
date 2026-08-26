@@ -1,0 +1,191 @@
+{
+  "version": 1,
+  "_comment": "픽스처 전용 목 정답지. 실제 정답지는 testdata/eval/ground_truth.json (테스트 데이터 담당 소유).",
+  "items": [
+    {
+      "file": "fx_perfect.jpg",
+      "difficulty": "easy",
+      "truth": {
+        "title": "조성진 피아노 리사이틀",
+        "artist": "조성진",
+        "venue": "롯데콘서트홀",
+        "date": "2025-03-15",
+        "seat_raw": "R석 1층 B구역 15열 1번",
+        "seat": {
+          "floor": 1,
+          "block": "B",
+          "row": 15,
+          "number": 1,
+          "grade": "R석"
+        },
+        "price": 190000,
+        "program": [
+          "Chopin - 24 Preludes, Op.28"
+        ]
+      },
+      "unreadable_fields": []
+    },
+    {
+      "file": "fx_variant.jpg",
+      "difficulty": "medium",
+      "truth": {
+        "title": "빈 필하모닉 오케스트라 내한공연",
+        "artist": "빈 필하모닉 오케스트라",
+        "venue": "예술의전당 콘서트홀",
+        "date": "2025-04-02",
+        "seat_raw": "S석 2층 A구역 3열 12번",
+        "seat": {
+          "floor": 2,
+          "block": "A",
+          "row": 3,
+          "number": 12,
+          "grade": "S석"
+        },
+        "price": 220000,
+        "program": [
+          "Brahms - Symphony No.4, Op.98",
+          "Mozart - Overture to Le nozze di Figaro"
+        ]
+      },
+      "unreadable_fields": []
+    },
+    {
+      "file": "fx_hallu.jpg",
+      "difficulty": "hard",
+      "truth": {
+        "title": "메트로폴리탄 오페라 갈라",
+        "artist": null,
+        "venue": "롯데콘서트홀",
+        "date": "2024-06-20",
+        "seat_raw": "1층 C구역 7열 22번",
+        "seat": {
+          "floor": 1,
+          "block": "C",
+          "row": 7,
+          "number": 22,
+          "grade": null
+        },
+        "price": 470000,
+        "program": []
+      },
+      "unreadable_fields": [
+        "artist",
+        "program"
+      ]
+    },
+    {
+      "file": "fx_abstain.jpg",
+      "difficulty": "medium",
+      "truth": {
+        "title": "교향악축제 2025",
+        "artist": null,
+        "venue": "예술의전당 콘서트홀",
+        "date": "2025-04-11",
+        "seat_raw": "3층 D구역 2열 5번",
+        "seat": {
+          "floor": 3,
+          "block": "D",
+          "row": 2,
+          "number": 5,
+          "grade": null
+        },
+        "price": 30000,
+        "program": []
+      },
+      "unreadable_fields": [
+        "artist",
+        "program"
+      ]
+    },
+    {
+      "file": "fx_lowconf.jpg",
+      "difficulty": "hard",
+      "truth": {
+        "title": "세종 체임버 시리즈",
+        "artist": null,
+        "venue": "세종문화회관 대극장",
+        "date": "2025-11-08",
+        "seat_raw": null,
+        "seat": null,
+        "price": 60000,
+        "program": [
+          "Schubert - Piano Trio No.2, D.929"
+        ]
+      },
+      "unreadable_fields": [
+        "artist",
+        "seat",
+        "seat_raw"
+      ]
+    },
+    {
+      "file": "fx_edge.jpg",
+      "difficulty": "hard",
+      "truth": {
+        "_note": "unreadable_fields 를 쓰지 않고 \"\" / null 로만 표기 — 채점기가 동일하게 취급해야 한다",
+        "title": "",
+        "artist": "무명 앙상블",
+        "venue": "롯데콘서트홀",
+        "date": null,
+        "seat_raw": "",
+        "seat": {
+          "floor": null,
+          "block": null,
+          "row": null,
+          "number": null,
+          "grade": null
+        },
+        "price": null,
+        "program": []
+      },
+      "unreadable_fields": []
+    },
+    {
+      "file": "fx_alpharow.jpg",
+      "difficulty": "hard",
+      "truth": {
+        "_note": "세종 대극장식 알파벳 열. ParsedSeat.row 는 number|null 이라 구조적으로 불일치 — 크래시하면 안 된다",
+        "title": "해리포터 인 콘서트",
+        "artist": null,
+        "venue": "세종문화회관 대극장",
+        "date": "2025-12-24",
+        "seat_raw": "1층 B열 191번",
+        "seat": {
+          "floor": 1,
+          "block": null,
+          "row": "B",
+          "number": 191,
+          "grade": "R석"
+        },
+        "price": 90000,
+        "program": []
+      },
+      "unreadable_fields": [
+        "artist",
+        "program"
+      ]
+    },
+    {
+      "file": "fx_misattr.jpg",
+      "difficulty": "medium",
+      "truth": {
+        "_note": "모델이 title 문자열을 artist 에도 복사 — 티켓에 있는 글자라 '날조'가 아니라 '귀속 오류'",
+        "title": "국립현대무용단 <내가 물에서 본 것>",
+        "artist": null,
+        "venue": "예술의전당 토월극장",
+        "date": "2026-03-14",
+        "seat_raw": null,
+        "seat": null,
+        "price": null,
+        "program": []
+      },
+      "unreadable_fields": [
+        "artist",
+        "seat_raw",
+        "seat",
+        "price",
+        "program"
+      ]
+    }
+  ]
+}

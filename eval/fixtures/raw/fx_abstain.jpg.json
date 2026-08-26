@@ -1,0 +1,14 @@
+{
+  "meta": { "file": "fx_abstain.jpg", "model": "mock-model", "bytes": 444444 },
+  "latencyMs": 1990, "attempts": 1,
+  "usage": { "promptTokenCount": 1275, "candidatesTokenCount": 180, "totalTokenCount": 1455 },
+  "output": {
+    "title":    { "value": "교향악축제 2025", "confidence": 0.94 },
+    "artist":   { "value": "", "confidence": 0.0 },
+    "venue":    { "value": "예술의전당 콘서트홀", "confidence": 0.96 },
+    "date":     { "value": "2025-04-11", "confidence": 0.97 },
+    "seat_raw": { "value": "3층 D구역 2열 5번", "confidence": 0.88 },
+    "price":    { "value": 30000, "confidence": 0.92 },
+    "program":  []
+  }
+}

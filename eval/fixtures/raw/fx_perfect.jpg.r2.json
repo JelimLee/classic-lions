@@ -1,0 +1,14 @@
+{
+  "meta": { "file": "fx_perfect.jpg", "repeatIndex": 2, "model": "mock-model", "bytes": 123456 },
+  "latencyMs": 2010, "attempts": 1,
+  "usage": { "promptTokenCount": 1290, "candidatesTokenCount": 205, "totalTokenCount": 1495 },
+  "output": {
+    "title":    { "value": "조성진 피아노 리싸이틀", "confidence": 0.93 },
+    "artist":   { "value": "조성진", "confidence": 0.96 },
+    "venue":    { "value": "롯데콘서트홀", "confidence": 0.95 },
+    "date":     { "value": "2025.03.15", "confidence": 0.9 },
+    "seat_raw": { "value": "R석 1층 B구역 15열 1번", "confidence": 0.91 },
+    "price":    { "value": 190000, "confidence": 0.9 },
+    "program":  [ { "value": "Chopin - 24 Preludes, Op.28", "confidence": 0.86 } ]
+  }
+}

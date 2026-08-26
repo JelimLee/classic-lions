@@ -1,0 +1,17 @@
+{
+  "meta": { "file": "fx_hallu.jpg", "model": "mock-model", "bytes": 333333 },
+  "latencyMs": 3100, "attempts": 2,
+  "usage": { "promptTokenCount": 1400, "candidatesTokenCount": 300, "totalTokenCount": 1700 },
+  "output": {
+    "title":    { "value": "메트로폴리탄 오페라 갈라", "confidence": 0.82 },
+    "artist":   { "value": "임윤찬", "confidence": 0.91 },
+    "venue":    { "value": "롯데콘서트홀", "confidence": 0.93 },
+    "date":     { "value": "내일 저녁 7시 30분", "confidence": 0.41 },
+    "seat_raw": { "value": "1층 C구역 7열 22번", "confidence": 0.77 },
+    "price":    { "value": null, "confidence": 0.0 },
+    "program":  [
+      { "value": "Verdi - La Traviata Prelude", "confidence": 0.79 },
+      { "value": "Puccini - Nessun Dorma", "confidence": 0.75 }
+    ]
+  }
+}

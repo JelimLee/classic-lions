@@ -1,0 +1,13 @@
+{
+  "_comment": "토큰 단가표. 값이 null 이면 리포트는 비용을 '미산출'로 쓴다 — 추측한 숫자를 채우지 말 것.",
+  "_howto": "Google AI 공식 가격표에서 해당 모델의 1M 토큰당 단가를 확인해 inputPerMTok / outputPerMTok 에 넣으면 report.md 의 7장이 실제 금액으로 바뀐다.",
+  "models": {
+    "default": {
+      "inputPerMTok": null,
+      "outputPerMTok": null,
+      "currency": "USD",
+      "source": null,
+      "checkedAt": null
+    }
+  }
+}

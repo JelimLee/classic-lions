@@ -1,18 +1,52 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { HashRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Calendar, Ticket, User, Music2 } from 'lucide-react';
+import { LayoutDashboard, Calendar, Ticket, User, Music2, AlertTriangle, X } from 'lucide-react';
 import Dashboard from './components/Dashboard';
 import CalendarView from './components/CalendarView';
 import TicketOCR from './components/TicketOCR';
 import ProfileSettings from './components/ProfileSettings';
 import { UserProfile, Concert, FeedbackEntry } from './types';
 import { INITIAL_PROFILE, MOCK_PAST_CONCERTS } from './constants';
+import { STORAGE_KEYS, loadState, saveState, saveConcerts } from './services/storage';
 
 const App: React.FC = () => {
-  const [profile, setProfile] = useState<UserProfile>(INITIAL_PROFILE);
-  const [concerts, setConcerts] = useState<Concert[]>(MOCK_PAST_CONCERTS);
-  const [feedbackHistory, setFeedbackHistory] = useState<FeedbackEntry[]>([]);
+  // E. 새로고침해도 살아남게 localStorage에서 복원한다.
+  const [profile, setProfile] = useState<UserProfile>(
+    () => loadState<UserProfile>(STORAGE_KEYS.profile, INITIAL_PROFILE),
+  );
+  const [concerts, setConcerts] = useState<Concert[]>(
+    () => loadState<Concert[]>(STORAGE_KEYS.concerts, MOCK_PAST_CONCERTS),
+  );
+  const [feedbackHistory, setFeedbackHistory] = useState<FeedbackEntry[]>(
+    () => loadState<FeedbackEntry[]>(STORAGE_KEYS.feedback, []),
+  );
+  const [storageWarning, setStorageWarning] = useState<string | null>(null);
+
+  // 첫 렌더의 저장 왕복을 건너뛴다 (막 복원한 값을 곧바로 되쓸 이유가 없다)
+  const hydrated = useRef(false);
+  useEffect(() => { hydrated.current = true; }, []);
+
+  useEffect(() => {
+    if (!hydrated.current) return;
+    const r = saveState(STORAGE_KEYS.profile, profile);
+    if (!r.ok) setStorageWarning(r.message ?? null);
+  }, [profile]);
+
+  useEffect(() => {
+    if (!hydrated.current) return;
+    // 티켓 이미지가 base64라 여기서만 용량 초과가 난다 → 이미지를 떼고라도 살린다.
+    const r = saveConcerts(concerts);
+    if (!r.ok) setStorageWarning(r.message ?? null);
+    else if (r.degraded) setStorageWarning(r.message ?? null);
+    else setStorageWarning(null);
+  }, [concerts]);
+
+  useEffect(() => {
+    if (!hydrated.current) return;
+    const r = saveState(STORAGE_KEYS.feedback, feedbackHistory);
+    if (!r.ok) setStorageWarning(r.message ?? null);
+  }, [feedbackHistory]);
 
   const addConcert = (newConcert: Concert) => {
     setConcerts(prev => [...prev, newConcert]);
@@ -52,6 +86,16 @@ const App: React.FC = () => {
           <MobileNavLink to="/upload" icon={<Ticket size={24} />} />
           <MobileNavLink to="/profile" icon={<User size={24} />} />
         </nav>
+
+        {storageWarning && (
+          <div className="sticky top-0 z-40 flex items-start gap-2 px-4 py-2.5 bg-amber-900/40 border-b border-amber-700/50 text-amber-100 text-xs backdrop-blur">
+            <AlertTriangle size={14} className="shrink-0 mt-0.5 text-amber-400" />
+            <span className="flex-1 leading-relaxed">{storageWarning}</span>
+            <button onClick={() => setStorageWarning(null)} className="shrink-0 text-amber-300/60 hover:text-amber-100">
+              <X size={14} />
+            </button>
+          </div>
+        )}
 
         <main className="p-4 md:p-8 max-w-5xl mx-auto w-full">
           <Routes>

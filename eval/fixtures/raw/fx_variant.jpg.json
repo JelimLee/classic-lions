@@ -1,0 +1,26 @@
+{
+  "meta": {
+    "file": "fx_variant.jpg",
+    "model": "mock-model",
+    "bytes": 222222
+  },
+  "latencyMs": 2300,
+  "attempts": 1,
+  "usage": {
+    "promptTokenCount": 1310,
+    "candidatesTokenCount": 260,
+    "totalTokenCount": 1570
+  },
+  "output": {
+    "title": "빈 필하모닉 오케스트라 내한공연 (2025)",
+    "artist": "빈 필하모닉 오케스트라",
+    "venue": "예술의 전당  콘서트홀",
+    "date": "2025.04.02",
+    "seat_raw": "2층 A구역 3열 12번",
+    "price": "220,000원",
+    "program": [
+      "Brahms: Symphony No. 4 Op. 98",
+      "Beethoven - Egmont Overture"
+    ]
+  }
+}

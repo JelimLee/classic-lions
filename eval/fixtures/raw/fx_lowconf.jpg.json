@@ -1,0 +1,12 @@
+{
+  "meta": { "file": "fx_lowconf.jpg", "model": "mock-model", "bytes": 555555 },
+  "latencyMs": 2450, "attempts": 1,
+  "usage": { "promptTokenCount": 1330, "candidatesTokenCount": 240, "totalTokenCount": 1570 },
+  "output": {
+    "title":    { "value": "세종 체임버 시리즈", "confidence": 0.71 },
+    "artist":   { "value": "김선욱", "confidence": 0.2 },
+    "date":     { "value": "2025-11-08", "confidence": 0.93 },
+    "price":    { "value": 60000, "confidence": 0.65 },
+    "program":  [ { "value": "Schubert - Piano Trio No. 2, D. 929", "confidence": 0.7 } ]
+  }
+}

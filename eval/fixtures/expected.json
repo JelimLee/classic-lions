@@ -1,0 +1,366 @@
+{
+  "_comment": "채점기 self-test 기대값. eval/lib/scoring.mjs 를 고치면 여기가 먼저 깨져야 한다.",
+  "lowConfThreshold": 0.5,
+  "fields": [
+    {
+      "file": "fx_perfect.jpg",
+      "field": "title",
+      "correct": true,
+      "exact": true
+    },
+    {
+      "file": "fx_perfect.jpg",
+      "field": "date",
+      "correct": true,
+      "pred": "2025-03-15"
+    },
+    {
+      "file": "fx_perfect.jpg",
+      "field": "seat_raw",
+      "correct": true,
+      "exact": true
+    },
+    {
+      "file": "fx_perfect.jpg",
+      "field": "seat.floor",
+      "correct": true
+    },
+    {
+      "file": "fx_perfect.jpg",
+      "field": "seat.block",
+      "correct": true
+    },
+    {
+      "file": "fx_perfect.jpg",
+      "field": "seat.row",
+      "correct": true
+    },
+    {
+      "file": "fx_perfect.jpg",
+      "field": "seat.number",
+      "correct": true
+    },
+    {
+      "file": "fx_perfect.jpg",
+      "field": "seat.grade",
+      "correct": true
+    },
+    {
+      "file": "fx_perfect.jpg",
+      "field": "price",
+      "correct": true
+    },
+    {
+      "file": "fx_perfect.jpg",
+      "field": "program",
+      "correct": true,
+      "f1": 1
+    },
+    {
+      "file": "fx_variant.jpg",
+      "field": "title",
+      "correct": false,
+      "exact": false,
+      "similarityAtLeast": 0.7,
+      "similarityAtMost": 0.95
+    },
+    {
+      "file": "fx_variant.jpg",
+      "field": "venue",
+      "correct": true,
+      "exact": true,
+      "_why": "공백 정규화만으로 일치해야 함"
+    },
+    {
+      "file": "fx_variant.jpg",
+      "field": "artist",
+      "correct": true
+    },
+    {
+      "file": "fx_variant.jpg",
+      "field": "date",
+      "correct": true,
+      "pred": "2025-04-02"
+    },
+    {
+      "file": "fx_variant.jpg",
+      "field": "seat_raw",
+      "correct": false,
+      "similarityAtLeast": 0.7
+    },
+    {
+      "file": "fx_variant.jpg",
+      "field": "seat.floor",
+      "correct": true
+    },
+    {
+      "file": "fx_variant.jpg",
+      "field": "seat.block",
+      "correct": true
+    },
+    {
+      "file": "fx_variant.jpg",
+      "field": "seat.row",
+      "correct": true
+    },
+    {
+      "file": "fx_variant.jpg",
+      "field": "seat.number",
+      "correct": true
+    },
+    {
+      "file": "fx_variant.jpg",
+      "field": "seat.grade",
+      "correct": false,
+      "_why": "seat_raw 에 등급이 없어 parseSeat 이 null"
+    },
+    {
+      "file": "fx_variant.jpg",
+      "field": "price",
+      "correct": true,
+      "_why": "'220,000원' → 220000"
+    },
+    {
+      "file": "fx_variant.jpg",
+      "field": "program",
+      "correct": false,
+      "precision": 0.5,
+      "recall": 0.5,
+      "f1": 0.5
+    },
+    {
+      "file": "fx_hallu.jpg",
+      "field": "artist",
+      "correct": false,
+      "nullTruth": true,
+      "outcome": "fabricated"
+    },
+    {
+      "file": "fx_hallu.jpg",
+      "field": "program",
+      "correct": false,
+      "nullTruth": true,
+      "outcome": "fabricated"
+    },
+    {
+      "file": "fx_hallu.jpg",
+      "field": "date",
+      "correct": false,
+      "pred": null,
+      "_why": "'내일 저녁' 은 파싱 불가 → null"
+    },
+    {
+      "file": "fx_hallu.jpg",
+      "field": "price",
+      "correct": false,
+      "_why": "정답 470000, 모델 null"
+    },
+    {
+      "file": "fx_hallu.jpg",
+      "field": "seat.grade",
+      "correct": true,
+      "nullTruth": true,
+      "outcome": "abstain_empty"
+    },
+    {
+      "file": "fx_hallu.jpg",
+      "field": "seat.number",
+      "correct": true
+    },
+    {
+      "file": "fx_abstain.jpg",
+      "field": "artist",
+      "correct": true,
+      "nullTruth": true,
+      "outcome": "abstain_empty"
+    },
+    {
+      "file": "fx_abstain.jpg",
+      "field": "program",
+      "correct": true,
+      "nullTruth": true,
+      "outcome": "abstain_empty"
+    },
+    {
+      "file": "fx_abstain.jpg",
+      "field": "date",
+      "correct": true,
+      "pred": "2025-04-11"
+    },
+    {
+      "file": "fx_abstain.jpg",
+      "field": "price",
+      "correct": true
+    },
+    {
+      "file": "fx_lowconf.jpg",
+      "field": "artist",
+      "correct": true,
+      "nullTruth": true,
+      "outcome": "abstain_lowconf",
+      "strictHallucination": true
+    },
+    {
+      "file": "fx_lowconf.jpg",
+      "field": "venue",
+      "correct": false,
+      "_why": "모델이 venue 키 자체를 누락"
+    },
+    {
+      "file": "fx_lowconf.jpg",
+      "field": "seat",
+      "correct": true,
+      "nullTruth": true,
+      "outcome": "abstain_empty"
+    },
+    {
+      "file": "fx_lowconf.jpg",
+      "field": "seat_raw",
+      "correct": true,
+      "nullTruth": true,
+      "outcome": "abstain_empty"
+    },
+    {
+      "file": "fx_lowconf.jpg",
+      "field": "program",
+      "correct": true,
+      "f1": 1,
+      "_why": "'No. 2' vs 'No.2' 표기차는 normalizeWork 가 흡수"
+    },
+    {
+      "file": "fx_lowconf.jpg",
+      "field": "title",
+      "correct": true
+    },
+    {
+      "file": "fx_edge.jpg",
+      "field": "title",
+      "correct": true,
+      "nullTruth": true,
+      "outcome": "abstain_empty",
+      "_why": "정답이 \"\" — unreadable_fields 에 없어도 null 정답과 동일하게 취급해야 한다"
+    },
+    {
+      "file": "fx_edge.jpg",
+      "field": "artist",
+      "correct": true,
+      "exact": true
+    },
+    {
+      "file": "fx_edge.jpg",
+      "field": "date",
+      "correct": true,
+      "nullTruth": true,
+      "outcome": "abstain_empty"
+    },
+    {
+      "file": "fx_edge.jpg",
+      "field": "seat_raw",
+      "correct": true,
+      "nullTruth": true,
+      "outcome": "abstain_empty"
+    },
+    {
+      "file": "fx_edge.jpg",
+      "field": "seat",
+      "correct": true,
+      "nullTruth": true,
+      "outcome": "abstain_empty",
+      "_why": "seat 하위가 전부 null 이면 하위필드 5개가 아니라 seat 하나로 기권 판정"
+    },
+    {
+      "file": "fx_edge.jpg",
+      "field": "price",
+      "correct": true,
+      "nullTruth": true,
+      "outcome": "nonnumeric_text",
+      "pred": "초대",
+      "_why": "정답 price=null 은 '숫자 금액 없음'. 모델은 인쇄된 '초대'를 읽은 것이라 날조가 아니다"
+    },
+    {
+      "file": "fx_edge.jpg",
+      "field": "program",
+      "correct": true,
+      "nullTruth": true,
+      "outcome": "abstain_empty"
+    },
+    {
+      "file": "fx_alpharow.jpg",
+      "field": "seat.row",
+      "correct": false,
+      "typeMismatch": true,
+      "_why": "정답 row='B'(문자열) vs ParsedSeat.row=number|null — 크래시 없이 오답 처리 + 플래그"
+    },
+    {
+      "file": "fx_alpharow.jpg",
+      "field": "seat.floor",
+      "correct": true
+    },
+    {
+      "file": "fx_alpharow.jpg",
+      "field": "seat.number",
+      "correct": true
+    },
+    {
+      "file": "fx_alpharow.jpg",
+      "field": "date",
+      "correct": true,
+      "pred": "2025-12-24"
+    },
+    {
+      "file": "fx_alpharow.jpg",
+      "field": "artist",
+      "correct": true,
+      "nullTruth": true,
+      "outcome": "abstain_empty"
+    },
+    {
+      "file": "fx_misattr.jpg",
+      "field": "artist",
+      "correct": false,
+      "nullTruth": true,
+      "outcome": "misattributed",
+      "misattributed": true,
+      "fabricated": false,
+      "_why": "'국립현대무용단' 은 정답 title 안에 있는 글자 — 날조가 아니라 필드 귀속 오류"
+    },
+    {
+      "file": "fx_misattr.jpg",
+      "field": "price",
+      "correct": true,
+      "nullTruth": true,
+      "outcome": "abstain_empty"
+    },
+    {
+      "file": "fx_misattr.jpg",
+      "field": "seat_raw",
+      "correct": true,
+      "nullTruth": true,
+      "outcome": "abstain_empty"
+    },
+    {
+      "file": "fx_misattr.jpg",
+      "field": "title",
+      "correct": true,
+      "exact": true
+    }
+  ],
+  "aggregate": {
+    "nItems": 8,
+    "hallucination": {
+      "nNullFields": 23,
+      "nHallucinated": 2,
+      "nMisattributed": 1,
+      "nNonNumericText": 1,
+      "nStrict": 5
+    }
+  },
+  "nondeterminism": {
+    "_why": "fx_perfect 는 r1/r2 두 번 호출됐고 title 만 흔들린다",
+    "unstableFieldsFor": {
+      "fx_perfect.jpg": [
+        "title"
+      ]
+    }
+  }
+}
