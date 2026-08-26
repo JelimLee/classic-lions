@@ -1,0 +1,8 @@
+{
+  "name": "Classic Lions (클래식 리언즈)",
+  "description": "멀티모달 AI를 활용한 클래식 공연 아카이빙 및 초개인화 티켓팅 큐레이션 에이전트. 티켓 사진 한 장으로 아카이빙을 완성하고 취향 저격 공연을 추천받으세요.",
+  "requestFramePermissions": [
+    "camera"
+  ],
+  "majorCapabilities": []
+}

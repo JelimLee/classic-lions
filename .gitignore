@@ -1,0 +1,7 @@
+node_modules/
+.env.local
+.env
+dist/
+testdata/_raw_screenshots/
+eval/out/
+.DS_Store
