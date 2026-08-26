@@ -1,7 +1,9 @@
 
 import React, { useState } from 'react';
 import { UserProfile, Era, Instrument } from '../types';
-import { Save, Heart, MapPin, Plus, X, Music, Check, Settings2, RefreshCw } from 'lucide-react';
+import { Save, Heart, MapPin, Plus, X, Music, Check, Settings2, RefreshCw, User } from 'lucide-react';
+import AvatarMaker from './avatar/AvatarMaker';
+import { loadAvatar } from '../services/storage';
 
 interface ProfileSettingsProps {
   profile: UserProfile;
@@ -12,6 +14,8 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ profile, onSave }) =>
   const [localProfile, setLocalProfile] = useState<UserProfile>(profile);
   const [newComposer, setNewComposer] = useState('');
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'success'>('idle');
+  // 아바타는 프로필과 별도 키에 저장한다(App.tsx를 건드리지 않기 위해).
+  const [avatarInit] = useState(() => loadAvatar());
 
   const toggleEra = (era: Era) => {
     setLocalProfile(prev => ({
@@ -69,6 +73,15 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ profile, onSave }) =>
           서울의 수천 개 공연 중 가장 완벽한 무대를 엄선합니다.
         </p>
       </header>
+
+      {/* 아바타 메이커 — 객석에 앉힐 나만의 캐릭터 */}
+      <section className="space-y-6">
+        <div className="flex items-center gap-3 text-amber-500">
+          <User size={22} />
+          <h3 className="text-2xl font-bold serif">나의 관객 캐릭터</h3>
+        </div>
+        <AvatarMaker initial={avatarInit.config} loadWarnings={avatarInit.warnings} />
+      </section>
 
       {/* Favorite Composers */}
       <section className="space-y-6">

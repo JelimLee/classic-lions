@@ -1,5 +1,25 @@
 # SEATMAP_geometry — 픽셀아트 단면도 좌표 설계
 
+> ## ⚠️ 이 문서는 【보관】 단면도(cross-section) 설계다
+>
+> 현재 기본 좌석표는 **위에서 본 평면도(top-down) 9격자**다.
+> 각 층을 앞/중/뒤 × 좌/중/우 9칸으로 나누고, 무대 뒤 합창석은 격자 밖 별도 존이다.
+>
+> - 구현: `app/services/seatGeometry.ts` (존 표 + 층 평면), `app/components/seatmap/`
+> - 렌더 확인: `docs/seatmaps/render_topdown_lotte.png`, `render_topdown_sac.png`
+> - 왜 바꿨나: 예당 공식 XLS 가 **셀 하나 = 좌석 하나인 평면 격자**라 top-down 이
+>   원자료에 그대로 대응한다. 그리고 단면도의 최대 약점이던 `tier`(층 높이 —
+>   51개 블록 전부 추정값)가 평면도에서는 **아예 필요 없다.**
+>
+> 아래 §1~§8 은 단면도 뷰의 설계이고, 그 코드는 지우지 않고 옮겨 보관했다:
+> `app/services/crossSectionGeometry.ts`, `app/components/seatmap/halls/cross-section/`.
+> 나중에 "세 번째 뷰"로 되살릴 때 이 문서를 그대로 쓰면 된다.
+>
+> **top-down 의 9격자 매핑 규칙은 `seatGeometry.ts` 상단 주석과 `ZONE_SPECS` 표가
+> 단일 출처다** — 여기에 중복해서 적지 않는다 (둘이 어긋나는 게 제일 나쁘다).
+
+---
+
 > 대상: `app/data/venues.ts` 의 `VenueProfile` → 아트 캔버스 좌표 변환.
 > 목표: 사용자가 "내가 **그 홀**에 앉아 있다"고 느끼게 하는 것. 대충 그린
 > 공연장 일러스트가 아니라, 롯데콘서트홀과 예술의전당 콘서트홀이 **서로 다르게**

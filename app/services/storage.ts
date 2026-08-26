@@ -5,12 +5,20 @@
  * 티켓 이미지가 base64 data URL이라 용량이 크다 → 쿼터 초과를 graceful하게 처리한다.
  */
 
+import {
+  DEFAULT_AVATAR,
+  deserializeAvatar,
+  normalizeAvatarConfig,
+  type AvatarConfig,
+} from '../components/avatar/parts.ts';
+
 const PREFIX = 'classic-lions/v1/';
 
 export const STORAGE_KEYS = {
   profile: `${PREFIX}profile`,
   concerts: `${PREFIX}concerts`,
   feedback: `${PREFIX}feedback`,
+  avatar: `${PREFIX}avatar`,
 } as const;
 
 function available(): Storage | null {
@@ -117,4 +125,33 @@ export function clearAll(): void {
   const ls = available();
   if (!ls) return;
   Object.values(STORAGE_KEYS).forEach(k => ls.removeItem(k));
+}
+
+/* ------------------------------------------------------------------ *
+ * 아바타 (pixel-art 프리셋 조합)
+ *
+ * 프로필과 분리된 키에 둔다. 티켓별 아바타(그날의 옷차림)로 확장할 때
+ * 같은 normalize를 재사용할 수 있게 값 검증은 parts.ts 가 맡는다.
+ * ------------------------------------------------------------------ */
+
+export interface AvatarLoadResult {
+  config: AvatarConfig;
+  /** styleVersion 불일치·사라진 파트 등. 있으면 UI에 그대로 보여준다. */
+  warnings: string[];
+  /** 저장된 값이 아예 없었는가 (기본 아바타를 쓴 경우) */
+  isDefault: boolean;
+}
+
+export function loadAvatar(): AvatarLoadResult {
+  const ls = available();
+  const raw = ls ? ls.getItem(STORAGE_KEYS.avatar) : null;
+  if (raw == null) return { config: { ...DEFAULT_AVATAR }, warnings: [], isDefault: true };
+  const { config, warnings } = deserializeAvatar(raw);
+  return { config, warnings, isDefault: false };
+}
+
+export function saveAvatar(config: AvatarConfig): SaveOutcome {
+  // 저장 직전에도 한 번 정규화한다 — 깨진 값을 저장소에 굳히지 않기 위해.
+  const { config: clean } = normalizeAvatarConfig(config);
+  return saveState(STORAGE_KEYS.avatar, clean);
 }

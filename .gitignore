@@ -5,3 +5,15 @@ dist/
 testdata/_raw_screenshots/
 eval/out/
 .DS_Store
+
+# 좌석 시야 원본 (롯데 큐브맵 66MB + 예당 사진 34MB).
+# 저작권이 남의 것이고 용량도 커서 git 에는 안 올린다.
+# 다시 받는 법은 app/assets/vr/CREDITS.md 참고. 픽셀화 결과물만 커밋한다.
+docs/refs/lotte_vr/raw/
+docs/refs/sac_seatview/raw/
+
+# 스크래치 — 개인 사진 변환본(인물 포함), 픽셀화 실험
+work/
+
+# VR 스크린샷 크롭 — 원본 파노라마를 확보해 불필요해짐 (tools/build_vr_points.py 로 재생성)
+docs/refs/

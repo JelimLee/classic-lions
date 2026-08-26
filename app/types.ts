@@ -3,6 +3,9 @@
 export type { ParsedSeat, OCRFieldValue, RawOCRResponse, OCRResult } from './services/ocrSchema';
 import type { ParsedSeat } from './services/ocrSchema';
 
+// 아바타 설정의 단일 출처는 components/avatar/parts.ts 다 (좌석도/프로필이 공유).
+export type { AvatarConfig } from './components/avatar/parts';
+
 export enum Era {
   BAROQUE = 'Baroque',
   CLASSICAL = 'Classical',

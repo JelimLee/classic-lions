@@ -6,6 +6,7 @@ import Dashboard from './components/Dashboard';
 import CalendarView from './components/CalendarView';
 import TicketOCR from './components/TicketOCR';
 import ProfileSettings from './components/ProfileSettings';
+import SeatMapPreview from './components/seatmap/SeatMapPreview';
 import { UserProfile, Concert, FeedbackEntry } from './types';
 import { INITIAL_PROFILE, MOCK_PAST_CONCERTS } from './constants';
 import { STORAGE_KEYS, loadState, saveState, saveConcerts } from './services/storage';
@@ -103,6 +104,8 @@ const App: React.FC = () => {
             <Route path="/calendar" element={<CalendarView concerts={concerts} />} />
             <Route path="/upload" element={<TicketOCR onAddConcert={addConcert} />} />
             <Route path="/profile" element={<ProfileSettings profile={profile} onSave={setProfile} />} />
+            {/* 좌석 단면도 QA 페이지. 네비게이션에는 노출하지 않는다 (docs/SEATMAP_geometry.md §8) */}
+            <Route path="/seatmap" element={<SeatMapPreview />} />
           </Routes>
         </main>
       </div>
