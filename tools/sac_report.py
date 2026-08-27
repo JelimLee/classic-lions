@@ -137,10 +137,16 @@ def main():
         pat = re.compile("|".join(re.escape(p) for p in pats), re.I)
         sns = set()
         for e in entries:
-            hay = (e.get("title") or "") + "\n" + (e.get("perfText") or "")
+            # 출연 크레딧에만 매칭한다. 남의 약력 산문에 이름이 언급된 것은 세지 않는다.
+            hay = "\n".join(
+                [e.get("title") or ""]
+                + list(e.get("performers") or [])
+                + [w.get("soloist") or "" for w in e["works"]])
             if pat.search(hay):
                 sns.add(e["sn"])
+        head_sns = {e["sn"] for e in entries if pat.search(e.get("title") or "")}
         ws = [o for sn in sns for o in occ_by_sn.get(sn, [])]
+        hws = [o for sn in head_sns for o in occ_by_sn.get(sn, [])]
         if not ws:
             art_rows.append({"artist": name, "concerts": len(sns), "works": 0})
             continue
@@ -158,6 +164,15 @@ def main():
             "meanCount": round(sum(cn) / len(cn), 1),
             "sampleWorks": [rarity[o["workKey"]]["label"][:60] for o in ws[:6]],
         })
+        if hws:
+            hrk = [rarity[o["workKey"]]["rank"] for o in hws]
+            hcn = [rarity[o["workKey"]]["count"] for o in hws]
+            art_rows[-1].update({
+                "headlineConcerts": len(head_sns),
+                "headlineWorks": len(hws),
+                "headlineMedianRank": sorted(hrk)[len(hrk) // 2],
+                "headlinePctRare": round(sum(1 for c in hcn if c <= 2) / len(hcn) * 100, 1),
+            })
     art_rows.sort(key=lambda r: -(r.get("medianRank") or 0))
     stats["artists"] = art_rows
 
@@ -230,6 +245,7 @@ def main():
              "form": w["form"], "opus": w["opus"], "number": w["number"],
              "count": w["count"], "concerts": w["concertCount"],
              "rank": w["rank"], "rarity": w["rarity"],
+             "rarityPct": round(w["rank"] / len(works), 4),
              "firstDate": w["firstDate"], "lastDate": w["lastDate"],
              "monthHist": dict(w["months"]), "altLabels": w["altLabels"]}
             for w in works],
