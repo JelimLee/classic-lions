@@ -47,6 +47,8 @@ if (args.help) {
   --allow-stale-cache      프롬프트/스키마가 바뀌어도 기존 캐시 재사용 (기본: 자동 무효화)
   --repeat N               같은 이미지를 N회 호출 (비결정성 측정용, 기본 1)
   --concurrency N          동시 호출 수 (기본 3)
+  --images <dir>           이미지 디렉터리 (기본 testdata/tickets)
+  --truth <path>           정답지 경로 (기본 testdata/eval/ground_truth.json)
   --resize <px>            장변 px로 리사이즈 후 호출 (macOS sips). ARCHITECTURE 4-3 C1 비교용
   --temperature N          생성 온도 지정 (기본: 미지정 = 모델 기본값)
   --max-retries N          rate limit/5xx 재시도 횟수 (기본 4)
@@ -74,15 +76,20 @@ const MODEL = args.model ? String(args.model) : mod.OCR_MODEL;
 const MODEL_OVERRIDDEN = Boolean(args.model) && MODEL !== mod.OCR_MODEL;
 const PROMPT = mod.OCR_PROMPT;
 const SCHEMA = mod.OCR_RESPONSE_SCHEMA;
+// 앱의 생성 설정(있으면). thinkingConfig 가 여기 들어 있다.
+const GENERATION_CONFIG = (mod.OCR_GENERATION_CONFIG && typeof mod.OCR_GENERATION_CONFIG === 'object')
+  ? mod.OCR_GENERATION_CONFIG : null;
 
 // ---------- 2) 대상 이미지 ----------
-const ticketsDir = path.join(ROOT, 'testdata', 'tickets');
+// --images / --truth 로 다른 이미지 세트·정답지를 평가할 수 있다(기본값은 기존 벤치마크 그대로).
+const ticketsDir = args.images ? path.resolve(String(args.images)) : path.join(ROOT, 'testdata', 'tickets');
+const truthFile = args.truth ? path.resolve(String(args.truth)) : truthPath(ROOT);
 let files = listTickets(ticketsDir);
 let truthFiles = null;
 try {
-  const { data, problems } = loadTruth(truthPath(ROOT));
+  const { data, problems } = loadTruth(truthFile);
   truthFiles = new Set(data.items.map((i) => i.file));
-  if (problems.length) console.warn(`[경고] ground_truth.json 검증 문제 ${problems.length}건:\n  ` + problems.slice(0, 10).join('\n  '));
+  if (problems.length) console.warn(`[경고] ${path.basename(truthFile)} 검증 문제 ${problems.length}건:\n  ` + problems.slice(0, 10).join('\n  '));
 } catch (e) {
   if (e instanceof TruthError && e.pending) console.warn(`[경고] ${e.message}\n        → 정답지 없이 OCR만 실행합니다(채점 불가).`);
   else throw e;
@@ -95,7 +102,7 @@ if (args.only) files = files.filter((f) => f === args.only || path.basename(f, p
 if (!files.length) {
   die(`[중단] 평가할 이미지가 없습니다: ${ticketsDir}\n` +
       (args.only ? `  --only ${args.only} 에 해당하는 파일이 없습니다.\n` : '') +
-      `테스트 데이터 담당이 testdata/tickets/*.jpg 를 생성하면 그대로 동작합니다.`);
+      `테스트 데이터 담당이 ${path.relative(ROOT, ticketsDir)}/*.jpg 를 생성하면 그대로 동작합니다.`);
 }
 if (truthFiles) {
   const missing = [...truthFiles].filter((f) => !files.includes(f));
@@ -116,6 +123,7 @@ const useCache = !args['no-cache'];
 const sha = (s) => crypto.createHash('sha256').update(s).digest('hex').slice(0, 16);
 const promptHash = sha(String(PROMPT));
 const schemaHash = sha(JSON.stringify(SCHEMA));
+const genConfigHash = sha(JSON.stringify(GENERATION_CONFIG));
 
 if (args['out-suffix']) RAW_BASE = path.join(OUT, `raw-${String(args['out-suffix']).replace(/[^A-Za-z0-9._-]/g, '_')}`);
 // 모델별로 raw 를 분리 저장한다. 이렇게 해야 모델 비교가 성립하고,
@@ -125,7 +133,9 @@ if (MODEL_OVERRIDDEN) console.log(`[안내] 모델 override: ${mod.OCR_MODEL} �
 const nOut = files.filter((f) => runScope.isOut(f)).length;
 if (nOut) console.log(`[안내] 범위 외(${DEFAULT_OUT_OF_SCOPE_PREFIXES.join(',')}) ${nOut}건 포함 — 채점 시 헤드라인 지표에서는 제외됩니다`);
 console.log(`대상 이미지 ${files.length}건 · repeat ${repeat} · 동시 ${concurrency}`);
-console.log(`모델 ${MODEL} · prompt#${promptHash} · schema#${schemaHash}${resize ? ` · resize ${resize}px` : ''}`);
+console.log(`모델 ${MODEL} · prompt#${promptHash} · schema#${schemaHash} · genCfg#${genConfigHash}${resize ? ` · resize ${resize}px` : ''}`);
+if (GENERATION_CONFIG) console.log(`생성 설정 ${JSON.stringify(GENERATION_CONFIG)}  (앱과 동일)`);
+else console.warn('[경고] OCR_GENERATION_CONFIG 가 없어 모델 기본 설정으로 호출합니다 — 앱과 조건이 다릅니다.');
 console.log(`원 응답 저장 위치 ${path.relative(ROOT, RAW)}`);
 // 예전 버전이 남긴 평평한 raw 파일 경고 (모델 구분 없이 저장되던 시절)
 if (fs.existsSync(RAW_BASE)) {
@@ -181,6 +191,8 @@ function cacheUsable(p, imageHash) {
     }
     if (j.meta?.imageHash !== imageHash) return null;
     if ((j.meta?.resize || 0) !== resize) return null;
+    // 생성 설정(thinking 등)이 바뀌면 지연·토큰이 달라지므로 캐시를 재사용하지 않는다.
+    if ((j.meta?.genConfigHash ?? null) !== genConfigHash) return null;
     return j;
   } catch { return null; }
 }
@@ -206,11 +218,15 @@ const results = await pMap(jobs, concurrency, async ({ file, r }) => {
       apiKey, model: MODEL, prompt: PROMPT, schema: SCHEMA,
       imageBase64: buf.toString('base64'), mimeType: mime,
       maxRetries, timeoutMs, temperature,
+      // 앱과 같은 생성 설정(temperature 0 · thinkingLevel MINIMAL)으로 호출한다.
+      // 이걸 넘기지 않으면 thinking 이 기본값으로 돌아 지연/토큰이 앱과 달라진다.
+      generationConfig: GENERATION_CONFIG,
     });
     called++;
     rec = {
       meta: {
-        file, repeatIndex: r, model: MODEL, promptHash, schemaHash, imageHash,
+        file, repeatIndex: r, model: MODEL, promptHash, schemaHash, genConfigHash,
+        generationConfig: GENERATION_CONFIG, imageHash,
         resize, resized, bytes: buf.length, mimeType: mime,
         schemaModule: path.relative(ROOT, schemaModulePath),
         temperature: temperature ?? null,
@@ -259,7 +275,7 @@ const tokThink = ok.reduce((s, r) => s + (r.usage?.thoughtsTokenCount || 0), 0);
 
 const summary = {
   ranAt: new Date().toISOString(),
-  model: MODEL, promptHash, schemaHash, resize, repeat, concurrency,
+  model: MODEL, promptHash, schemaHash, genConfigHash, generationConfig: GENERATION_CONFIG, resize, repeat, concurrency,
   schemaModule: path.relative(ROOT, schemaModulePath),
   nJobs: jobs.length, nCacheHits: cached, nApiCalls: called, nFailed: failed,
   wallMs: Date.now() - startedAt,

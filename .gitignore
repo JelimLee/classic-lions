@@ -17,3 +17,11 @@ work/
 
 # VR 스크린샷 크롭 — 원본 파노라마를 확보해 불필요해짐 (tools/build_vr_points.py 로 재생성)
 docs/refs/
+
+# 사용자 본인이 찍은 티켓 사진(실명·예매번호·QR 노출). 정답지(JSON)만 커밋한다.
+# 재생성: docs/GROUND_TRUTH_MINE.md 6장 참고.
+testdata/tickets_mine/
+
+# 파이썬 캐시
+__pycache__/
+*.pyc

@@ -14,7 +14,12 @@ function sleep(ms) { return new Promise((r) => setTimeout(r, ms)); }
  * 단일 이미지 OCR 호출.
  * @returns {{ json:any, rawText:string, latencyMs:number, usage:object, attempts:number, finishReason:string|null }}
  */
-export async function generateOcr({ apiKey, model, prompt, schema, imageBase64, mimeType = 'image/jpeg', maxRetries = 4, timeoutMs = 90000, temperature }) {
+export async function generateOcr({ apiKey, model, prompt, schema, imageBase64, mimeType = 'image/jpeg', maxRetries = 4, timeoutMs = 90000, temperature, generationConfig = null }) {
+  // ⚠️ generationConfig 는 app/services/ocrSchema.ts 의 OCR_GENERATION_CONFIG 를 그대로 받는다.
+  //    예전에는 이 인자가 없어서 `thinkingConfig: { thinkingLevel: 'MINIMAL' }` 이 조용히
+  //    버려졌고, 호출당 thinking 토큰 1,500+ / 지연 20~70초가 나왔다. 앱은 MINIMAL 로
+  //    호출하는데 평가는 기본값으로 호출했으니, 지연·토큰·비용 수치가 앱을 대표하지 못했다.
+  //    temperature 는 명시 인자가 있으면 그것이 우선(= --temperature CLI override).
   const body = {
     contents: [{
       role: 'user',
@@ -26,6 +31,7 @@ export async function generateOcr({ apiKey, model, prompt, schema, imageBase64, 
     generationConfig: {
       responseMimeType: 'application/json',
       ...(schema ? { responseSchema: schema } : {}),
+      ...(generationConfig && typeof generationConfig === 'object' ? generationConfig : {}),
       ...(typeof temperature === 'number' ? { temperature } : {}),
     },
   };
