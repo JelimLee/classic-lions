@@ -246,7 +246,13 @@ def build(rep: dict) -> tuple[list[str], dict]:
             'rarity, rarity_n, rarity_basis, source) '
             f'VALUES\n  {chunk}\n'
             'ON CONFLICT (id) DO UPDATE SET '
-            'rarity = EXCLUDED.rarity, rarity_n = EXCLUDED.rarity_n, '
+            # 두 홀을 병합할 때 rarity 를 덮어쓰면 안 된다.
+            # 각 홀 코퍼스 안에서 계산된 백분위라 합치면 의미가 달라진다.
+            # 연주 횟수만 합산하고, rarity 는 NULL 로 두어 재계산 대상임을 표시한다.
+            'rarity_n = COALESCE(works.rarity_n,0) + COALESCE(EXCLUDED.rarity_n,0), '
+            'rarity = NULL, rarity_basis = \'needs_recompute\', '
+            'title_ko = COALESCE(works.title_ko, EXCLUDED.title_ko), '
+            'forces = COALESCE(works.forces, EXCLUDED.forces), '
             'aliases = EXCLUDED.aliases, updated_at = now();'
         )
 
