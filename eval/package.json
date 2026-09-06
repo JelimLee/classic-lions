@@ -1,1 +1,14 @@
-{ "type": "module" }
+{
+  "name": "classic-lions-eval",
+  "private": true,
+  "type": "module",
+  "description": "티켓 OCR 정확도 평가 하네스. 의존성 없음 — Node 22+ 내장 fetch/test/타입스트리핑만 쓴다.",
+  "scripts": {
+    "test": "node --test \"lib/__tests__/**/*.test.mjs\"",
+    "fixtures": "node score.mjs --fixtures",
+    "eval": "node run.mjs && node score.mjs",
+    "eval:run": "node run.mjs",
+    "eval:score": "node score.mjs",
+    "eval:report": "node report.mjs"
+  }
+}
