@@ -26,13 +26,40 @@ from __future__ import annotations
 import argparse, json, re, sys
 from pathlib import Path
 
-try:
-    import Vision, Quartz
-    from Foundation import NSURL
-except ImportError:
-    print("pyobjc 가 필요하다: pip install pyobjc-framework-Vision", file=sys.stderr)
-    raise
-from PIL import Image, ImageDraw
+# macOS Vision / Quartz / Pillow 는 **지연 임포트**한다.
+#
+# 최상위에서 임포트하면 순수 판정 로직(classify / _is_fragment / 패턴표)을 macOS 밖에서는
+# import 조차 할 수 없어 테스트가 불가능해진다. 실제로 필요한 시점은 이미지를 읽을 때뿐이다.
+# 사용자가 보는 동작은 같다 — OCR 을 수행하는 순간 같은 안내와 함께 ImportError 가 난다.
+Vision = Quartz = NSURL = None
+Image = ImageDraw = None
+
+
+def _load_vision() -> None:
+    """macOS Vision/Quartz 를 로드한다 (analyze 진입 시)."""
+    global Vision, Quartz, NSURL
+    if Vision is not None:
+        return
+    try:
+        import Vision as _Vision, Quartz as _Quartz
+        from Foundation import NSURL as _NSURL
+    except ImportError:
+        print("pyobjc 가 필요하다: pip install pyobjc-framework-Vision", file=sys.stderr)
+        raise
+    Vision, Quartz, NSURL = _Vision, _Quartz, _NSURL
+
+
+def _load_pil() -> None:
+    """Pillow 를 로드한다 (redact 진입 시)."""
+    global Image, ImageDraw
+    if Image is not None:
+        return
+    try:
+        from PIL import Image as _Image, ImageDraw as _ImageDraw
+    except ImportError:
+        print("Pillow 가 필요하다: pip install Pillow", file=sys.stderr)
+        raise
+    Image, ImageDraw = _Image, _ImageDraw
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -79,6 +106,7 @@ def _handler(img):
 
 def analyze(path: Path) -> dict:
     """OCR + 바코드 검출. 정규화 좌표(0~1, 좌하단 원점)로 반환."""
+    _load_vision()
     url = NSURL.fileURLWithPath_(str(path))
     src = Quartz.CGImageSourceCreateWithURL(url, None)
     if src is None:
@@ -186,6 +214,7 @@ def redact(path: Path, out_dir: Path, preview: bool = False,
     W, H = a['width'], a['height']
     targets = classify(a['lines'])
 
+    _load_pil()
     im = Image.open(path).convert('RGB')
     if im.size != (W, H):          # EXIF 회전 등으로 어긋나면 좌표가 안 맞는다
         im = im.resize((W, H))
