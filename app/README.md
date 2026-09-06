@@ -33,6 +33,7 @@ npm run dev          # http://localhost:3000
 키가 없거나 자리표시자면 앱이 조용히 실패하지 않고 화면 상단에 빨간 안내를 띄웁니다.
 
 ```bash
+npm test             # 단위 테스트 155건 (Node 내장 러너, API 키·네트워크 불필요)
 npx tsc --noEmit     # 타입 체크
 npm run build        # 프로덕션 빌드 (배포용 아님 — 위 경고 참고)
 ```
@@ -55,8 +56,11 @@ app/
    ├─ models.ts               ⭐ 모델 ID 단일 출처
    ├─ ocrSchema.ts            ⭐ OCR 프롬프트/스키마 + 순수 파서 (브라우저 API 없음, Node에서 import 가능)
    ├─ imagePrep.ts            canvas 리사이즈 · EXIF 회전 보정 (브라우저 전용)
+   ├─ hybridOcr.ts            Vision 결과 → LLM 배치 구조화 + 오프라인 규칙 폴백
+   ├─ seatGeometry.ts         좌석 문자열 → 평면도 9격자 좌표 (precision 5단계 강등)
    ├─ geminiService.ts        Gemini 호출 · 통계 빠른 경로 · 에러 메시지
-   └─ storage.ts              localStorage 영속화 + 용량 초과 처리
+   ├─ storage.ts              localStorage 영속화 + 용량 초과 처리
+   └─ __tests__/              단위 테스트 155건
 ```
 
 ### `services/ocrSchema.ts` 는 계약 파일입니다
