@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
-import { UserProfile, Era, Instrument } from '../types';
-import { Save, Heart, MapPin, Plus, X, Music, Check, Settings2, RefreshCw, User } from 'lucide-react';
+import { UserProfile, Instrument } from '../types';
+import { Save, Plus, X, Music, Check, Settings2, RefreshCw, User } from 'lucide-react';
 import AvatarMaker from './avatar/AvatarMaker';
 import { loadAvatar } from '../services/storage';
 
@@ -16,15 +16,6 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ profile, onSave }) =>
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'success'>('idle');
   // 아바타는 프로필과 별도 키에 저장한다(App.tsx를 건드리지 않기 위해).
   const [avatarInit] = useState(() => loadAvatar());
-
-  const toggleEra = (era: Era) => {
-    setLocalProfile(prev => ({
-      ...prev,
-      preferredEras: prev.preferredEras.includes(era)
-        ? prev.preferredEras.filter(e => e !== era)
-        : [...prev.preferredEras, era]
-    }));
-  };
 
   const toggleInstrument = (inst: Instrument) => {
     setLocalProfile(prev => ({

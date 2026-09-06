@@ -19,7 +19,6 @@ import {
   PLANS,
   occupiedZones,
 } from '../../../services/seatGeometry.ts';
-import type { Zone } from '../../../services/seatGeometry.ts';
 import { C, CellTag, Outline, SeatCluster, StageBox } from '../planArt.tsx';
 import type { HallProps } from './LotteHall.tsx';
 

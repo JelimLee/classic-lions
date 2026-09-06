@@ -210,7 +210,7 @@ export function normalizeAvatarConfig(raw: unknown): NormalizeResult {
     ['glassesColor', 'glasses'],
     ['accessoriesColor', 'accessories'],
   ];
-  for (const [field, palette] of colorFields) {
+  for (const [field] of colorFields) {
     const hex = normalizeHex(src[field]);
     if (hex) (out as unknown as Record<string, unknown>)[field] = hex;
     else if (src[field] != null) {

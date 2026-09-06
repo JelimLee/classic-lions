@@ -15,7 +15,6 @@ import React, { useMemo } from 'react';
 import {
   AVATAR_CANVAS,
   avatarToSvgString,
-  DEFAULT_AVATAR,
   type AvatarConfig,
 } from './parts';
 
